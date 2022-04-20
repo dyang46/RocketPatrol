@@ -4,8 +4,9 @@ class Play extends Phaser.Scene {
     }
     preload() {
         this.load.image('rocket', './assets/canon.png');
-        this.load.image('spaceship', './assets/pk3.png');
-        this.load.image('starfield', './assets/starsky.png');
+        this.load.spritesheet('ship', './assets/ship.png', {frameWidth: 150, frameHeight: 70, startFrame: 0, endFrame: 3});
+        this.load.spritesheet('spaceship', './assets/p2.png', {frameWidth: 170, frameHeight: 70, startFrame: 0, endFrame: 2});
+        this.load.image('starfield', './assets/s.png');
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
         //explosion.png from https://github.com/nathanaltice/RocketPatrol/tree/master/assets
 
@@ -13,16 +14,36 @@ class Play extends Phaser.Scene {
     create() {
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
         // green UI background
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
-        // white borders
-        this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
+        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x0000).setOrigin(0, 0);
+        
+        
+        this.anims.create({
+            key: 's1',            
+            frames: this.anims.generateFrameNumbers('ship', {start: 0, end: 3, first: 0}),
+            frameRate: 4,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 's2',            
+            frames: this.anims.generateFrameNumbers('spaceship', {start: 0, end: 2, first: 0}),
+            frameRate: 3,
+            repeat: -1
+        });
+        //let miku = this.add.sprite(50, 50 ,'miku').setOrigin(0, 0);
+        //miku.anims.play('s1');
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'ship', 0, 10).setOrigin(0, 0);
+        this.ship03.play('s1');
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'ship', 0, 20).setOrigin(0,0);
+        this.ship02.play('s1');
+        this.ship01 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'ship', 0, 30).setOrigin(0,0);
+        this.ship01.play('s1');
+        //a smaller ship with faster speed and more points.
+        this.ship04 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 50).setOrigin(0,0);
+        this.ship04.setScale(0.7);
+        this.ship04.play('s2');
+        this.ship04.moveSpeed = 12;
+        
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -38,8 +59,8 @@ class Play extends Phaser.Scene {
         let scoreConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
+            backgroundColor: '#E3E4FA',
+            color: '#B21807',
             align: 'right',
             padding: {
             top: 5,
@@ -68,9 +89,11 @@ class Play extends Phaser.Scene {
         }
         if(!this.gameOver){
             this.p1Rocket.update();
+            //this.s1.update();
             this.ship01.update();               
             this.ship02.update();
             this.ship03.update();
+            this.ship04.update();
         }
         this.starfield.tilePositionX -= 4;
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
@@ -86,6 +109,11 @@ class Play extends Phaser.Scene {
           if (this.checkCollision(this.p1Rocket, this.ship01)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
+            //console.log('kaboom ship 01');
+          }
+          if (this.checkCollision(this.p1Rocket, this.ship04)) {
+            this.p1Rocket.reset();
+            this.shipExplode(this.ship04);
             //console.log('kaboom ship 01');
           }
     }
