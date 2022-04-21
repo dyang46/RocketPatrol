@@ -1,3 +1,12 @@
+//Donging Yang
+//dyang46@ucsc.edu
+//pirate ship hunter
+//4/20/2022
+//This project took me about 7-8 hours. 
+
+// Grade Break Down:
+// tot
+
 let config = {
     type: Phaser.CANVAS,
     width: 640,

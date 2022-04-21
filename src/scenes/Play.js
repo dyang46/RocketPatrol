@@ -55,11 +55,24 @@ class Play extends Phaser.Scene {
             frameRate: 30
         });
         this.p1Score = 0;
+        this.p1Fire = 0;
          // display score
         let scoreConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
-            backgroundColor: '#E3E4FA',
+            //backgroundColor: '#E3E4FA',
+            color: '#B21807',
+            align: 'left',
+            padding: {
+            top: 5,
+            bottom: 5,
+            },
+            fixedWidth: 100
+        }
+        let fireConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            //backgroundColor: '#E3E4FA',
             color: '#B21807',
             align: 'right',
             padding: {
@@ -68,7 +81,10 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        this.fire = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, 'SCORE:', fireConfig);
+        this.scoreLeft = this.add.text(borderUISize + borderPadding*12, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        this.fire = this.add.text(borderUISize + borderPadding*32, borderUISize + borderPadding*2, 'FIRE: ', fireConfig);
+        this.fireRight = this.add.text(borderUISize + borderPadding*42, borderUISize + borderPadding*2, this.p1Fire, scoreConfig);
         //game over
         this.gameOver =false;
         // clock
@@ -141,7 +157,9 @@ class Play extends Phaser.Scene {
           boom.destroy();                       // remove explosion sprite
         });  
         this.p1Score += ship.points;
+        this.p1Fire +=1;
         this.scoreLeft.text = this.p1Score;
+        this.fireRight.text = this.p1Fire;
         this.sound.play('sfx_explosion');
       }
 

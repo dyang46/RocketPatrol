@@ -8,7 +8,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_select', './assets/crash.wav');
         this.load.audio('sfx_explosion', './assets/exp.wav');
         this.load.audio('sfx_rocket', './assets/shot.wav');
-        this.load.audio('b', './assets/brgm.wav');
+        this.load.audio('b', './assets/bgrm.wav');
         this.load.image('background', './assets/bgr.png');
       }
 
@@ -28,6 +28,7 @@ class Menu extends Phaser.Scene {
         
         // show menu text
         this.bgr = this.add.tileSprite(0, 0, 640, 480, 'background').setOrigin(0, 0);
+        this.sound.play('b',{volume: -0.5,loop: true, connect: true});
         this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'PIRATE SHIP HUNTER', menuConfig).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#B21807';
@@ -35,10 +36,12 @@ class Menu extends Phaser.Scene {
         this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
         //this.add.text(20,20,"Rocket Patrol Menu");
         //this.scene.start("playScene");
+        
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     }
     update() {
+        
         if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
           // easy mode
           game.settings = {
